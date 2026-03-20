@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPD3 REPORT KSH - โรงพยาบาลคอนสาร</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #50e3c2;
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --text-dark: #2c3e50;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Animated Background for Glassmorphism to pop */
+        body {
+            font-family: 'Sarabun', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            color: var(--text-dark);
+            background: linear-gradient(45deg, #f3ec78, #af4261);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Blobs in background */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: floatBlob 20s infinite alternate;
+        }
+        body::before {
+            width: 500px;
+            height: 500px;
+            background: rgba(80, 227, 194, 0.6);
+            top: -100px;
+            left: -100px;
+        }
+        body::after {
+            width: 400px;
+            height: 400px;
+            background: rgba(74, 144, 226, 0.6);
+            bottom: -50px;
+            right: -50px;
+            animation-delay: -10s;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 100px) scale(1.2); }
+        }
+
+        /* Glassmorphism Utility Class */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .container-fluid.main-layout {
+            display: flex;
+            flex-grow: 1;
+            padding: 0;
+            max-width: 1600px; /* Constrain max width for ultra-wide screens */
+        }
+
+        /* Sidebar Glass */
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 40px);
+            overflow-y: auto;
+            padding: 20px;
+            margin-right: 20px;
+            margin-left: 20px;
+            flex-shrink: 0;
+            width: 300px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.5) transparent;
+        }
+        
+        /* Custom Scrollbar for webkit */
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.5); border-radius: 10px; }
+
+        .sidebar .card-header {
+            background: transparent;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+        }
+
+        .main-content-area {
+            flex-grow: 1;
+            min-width: 0;
+            margin-right: 20px;
+        }
+
+        .main-container {
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Header Glass */
+        .header {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: var(--text-dark);
+            padding: 30px 20px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: var(--glass-shadow);
+            position: relative;
+        }
+
+        .app-logo-text {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+        }
+        
+        .app-logo-icon {
+            color: #1e3c72;
+            margin-right: 15px;
+            font-size: 2.5rem;
+            filter: drop-shadow(2px 2px 2px rgba(255,255,255,0.5));
+        }
+
+        /* Nav Tabs Glass */
+        .nav-tabs {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 12px;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 12px 25px;
+            background: transparent;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-tabs .nav-link.active {
+            background: rgba(255, 255, 255, 0.7);
+            color: #1e3c72;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        /* Glass Cards for Reports */
+        .card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            height: 100%; /* For uniform grid heights */
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.55);
+        }
+
+        /* Clarified Card Headers */
+        .card-header {
+            background: rgba(255, 255, 255, 0.65);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 20px 20px 0 0 !important;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+        
+        .card-header:hover {
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .card-header h6, .card-header h5 {
+            margin: 0;
+            font-weight: 700;
+            color: #0b1c2d;
+            font-size: 1.3rem;
+            letter-spacing: 0.2px;
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 1);
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .header-icon-wrapper {
+            background: linear-gradient(135deg, var(--primary-color), #8e44ad);
+            color: white;
+            width: 42px;
+            height: 42px;
+            font-size: 1.25rem;
+            border-radius: 12px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+
+        /* Glass Inputs */
+        .form-control {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(74, 144, 226, 0.25);
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 10px;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary { background: rgba(74, 144, 226, 0.8); color: white; }
+        .btn-success { background: rgba(80, 227, 194, 0.8); color: #1a252f; border-color: rgba(255,255,255,0.5);}
+        .btn-warning { background: rgba(245, 166, 35, 0.8); color: white; }
+        .btn-danger { background: rgba(208, 2, 27, 0.8); color: white; }
+        .btn-info { background: rgba(91, 192, 222, 0.8); color: white; }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        /* Search Bar Area */
+        .search-container {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.4);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .search-input-group {
+            position: relative;
+            flex-grow: 1;
+        }
+        
+        .search-input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+        
+        .search-input-group .form-control {
+            padding-left: 45px;
+            font-size: 1.1rem;
+            border-radius: 20px;
+        }
+
+        /* Table of Contents Links */
+        .toc-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .toc-link:hover, .toc-link.active-toc {
+            background: rgba(255, 255, 255, 0.7);
+            transform: translateX(5px);
+            color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-color: white;
+        }
+        
+        .toc-link i {
+            width: 25px;
+            text-align: center;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        /* Link Items (Registry) */
+        .link-item {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .link-item:hover {
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        /* Alerts inside cards */
+        .alert-success {
+            background: rgba(80, 227, 194, 0.2);
+            border: 1px solid rgba(80, 227, 194, 0.4);
+            color: #1a252f;
+            border-radius: 12px;
+        }
+
+        /* Floating Button */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            border: 1px solid rgba(255,255,255,0.5);
+            background: rgba(74, 144, 226, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 24px;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.3s ease;
+            display: none;
+            cursor: pointer;
+        }
+        .floating-btn:hover { transform: scale(1.1); background: rgba(74, 144, 226, 1); }
+
+        /* Hover Preview Box Styles */
+        #hoverPreviewBox {
+            position: fixed;
+            z-index: 10000;
+            width: 500px;
+            height: 350px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.8);
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            display: none; /* Flex when visible */
+            flex-direction: column;
+            pointer-events: none; /* Important: prevents cursor flickering */
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        #hoverPreviewBox.show {
+            opacity: 1;
+        }
+        #hoverPreviewBox header {
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.7);
+            border-bottom: 1px solid rgba(200,200,200,0.3);
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #1e3c72;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #hoverPreviewBox iframe {
+            flex-grow: 1;
+            border: none;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 992px) {
+            .container-fluid.main-layout { flex-direction: column; }
+            .sidebar {
+                position: static;
+                width: auto;
+                height: auto;
+                max-height: 300px;
+                margin: 0 20px 20px 20px;
+            }
+            .main-content-area { margin-right: 0; padding: 0 20px; }
+            .search-container { flex-direction: column; align-items: stretch; }
+            #clearSearchBtn { width: 100%; }
+            #hoverPreviewBox { display: none !important; } /* Disable hover preview on mobile */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid main-layout">
+        <div class="sidebar glass-panel d-none d-lg-block">
+            <div class="card-header">
+                <h5><i class="fas fa-list-ul header-icon-wrapper" style="width:30px;height:30px;font-size:14px;background:rgba(255,255,255,0.5);color:#333;"></i> สารบัญเนื้อหา</h5>
+            </div>
+            <div class="card-body p-0" id="tableOfContentsLinks">
+                </div>
+        </div>
+
+        <div class="main-content-area flex-grow-1">
+            <div class="main-container glass-panel">
+                <div class="header">
+                    <div class="position-absolute top-0 end-0 m-3 d-flex gap-2 flex-wrap justify-content-end">
+                        <button class="btn btn-warning btn-sm shadow-sm rounded-pill px-3 fw-bold" onclick="prepareNotifyAll()">
+                            <i class="fas fa-bullhorn text-dark"></i> แจ้งเตือนทั้งระบบ
+                        </button>
+                        <button class="btn btn-light btn-sm shadow-sm rounded-pill px-3" onclick="new bootstrap.Modal(document.getElementById('supervisorSettingsModal')).show()">
+                            <i class="fas fa-cog text-secondary"></i> ตั้งค่าระบบ
+                        </button>
+                    </div>
+
+                    <h1>
+                        <i class="fas fa-user-nurse app-logo-icon"></i>
+                        <span class="app-logo-text">IPD3 REPORT KSH</span>
+                    </h1>
+                    <p class="mb-1" style="font-size:1.2rem; font-weight:600;">ระบบบันทึกรายงานประจำเดือน งานพยาบาลผู้ป่วยในชาย</p>
+                    <p class="mb-0 text-muted"><i class="fas fa-map-marker-alt text-danger"></i> โรงพยาบาลคอนสาร</p>
+                    <div class="mt-2 badge bg-light text-dark border" id="userIdDisplay"></div>
+                </div>
+
+                <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="registry-tab" data-bs-toggle="tab" data-bs-target="#registry" type="button" role="tab">
+                            <i class="fas fa-clipboard-list"></i> ทะเบียนผู้ป่วยในชาย
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab">
+                            <i class="fas fa-chart-line"></i> รายงานประจำเดือน
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    
+                    <div class="tab-pane fade show active p-2 p-md-4" id="registry" role="tabpanel">
+                        <div class="card" id="card-registry">
+                            <div class="card-header">
+                                <h5><span class="header-icon-wrapper"><i class="fas fa-users"></i></span> ทะเบียนผู้ป่วยในชาย</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3 g-2">
+                                    <div class="col-md-7">
+                                        <input type="url" class="form-control" id="registryLink" placeholder="ใส่ลิงค์ทะเบียนผู้ป่วย...">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" class="form-control" id="registryButtonName" placeholder="ชื่อรายการ (เช่น มกราคม 2567)...">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-primary w-100 h-100" onclick="addRegistryLink()">
+                                            <i class="fas fa-plus"></i> เพิ่ม
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="registryLinks" class="mt-4">
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade p-2 p-md-4" id="reports" role="tabpanel">
+                        
+                        <div class="search-container">
+                            <div class="search-input-group">
+                                <i class="fas fa-search"></i>
+                                <input type="text" class="form-control" id="searchInput" placeholder="ค้นหาชื่อรายงาน..." onkeyup="filterReports()">
+                            </div>
+                            <button class="btn btn-outline-secondary" id="clearSearchBtn" style="display: none; background:rgba(255,255,255,0.8);" onclick="showAllReports()">
+                                <i class="fas fa-eye"></i> แสดงรายงานทั้งหมด
+                            </button>
+                        </div>
+
+                        <h5 class="mb-4 fw-bold text-dark border-bottom pb-2 border-white"><i class="fas fa-bookmark text-primary"></i> รายงานที่กำหนดไว้ล่วงหน้า</h5>
+                        <div class="row" id="fixedReportsContainer">
+                            
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานสรุปกิจกรรมการพยาบาล">
+                                <div class="card" id="card-nursing">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'nursing', 'รายงานสรุปกิจกรรมการพยาบาล')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper"><i class="fas fa-user-nurse"></i></span> รายงานสรุปกิจกรรมการพยาบาล</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="nursing-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="nursing-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="nursing-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('nursing')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('nursing', 'รายงานสรุปกิจกรรมการพยาบาล')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="nursing-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานความเสี่ยง">
+                                <div class="card" id="card-risk">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'risk', 'รายงานความเสี่ยง')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #f39c12, #d35400);"><i class="fas fa-exclamation-triangle"></i></span> รายงานความเสี่ยง</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="risk-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="risk-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="risk-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('risk')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('risk', 'รายงานความเสี่ยง')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="risk-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานผู้ป่วยที่ได้รับการส่งต่อ (Refer)">
+                                <div class="card" id="card-refer">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'refer', 'รายงานผู้ป่วยที่ได้รับการส่งต่อ (Refer)')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #3498db, #2980b9);"><i class="fas fa-share"></i></span> รายงานผู้ป่วยที่ได้รับการส่งต่อ (Refer)</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="refer-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="refer-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="refer-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('refer')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('refer', 'รายงานผู้ป่วยที่ได้รับการส่งต่อ (Refer)')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="refer-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานแผลกดทับ">
+                                <div class="card" id="card-wound">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'wound', 'รายงานแผลกดทับ')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #e74c3c, #c0392b);"><i class="fas fa-band-aid"></i></span> รายงานแผลกดทับ</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="wound-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="wound-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="wound-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('wound')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('wound', 'รายงานแผลกดทับ')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="wound-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานรายละเอียดการติดตามแผลกดทับ">
+                                <div class="card" id="card-wound-follow">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'wound-follow', 'รายละเอียดการติดตามแผลกดทับ')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #1abc9c, #16a085);"><i class="fas fa-search-plus"></i></span> รายละเอียดการติดตามแผลกดทับ</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="wound-follow-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="wound-follow-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="wound-follow-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('wound-follow')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('wound-follow', 'รายละเอียดการติดตามแผลกดทับ')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="wound-follow-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานผู้ป่วยเสียชีวิต">
+                                <div class="card" id="card-death">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'death', 'รายงานผู้ป่วยเสียชีวิต')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #2c3e50, #000000);"><i class="fas fa-heart-broken"></i></span> รายงานผู้ป่วยเสียชีวิต</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="death-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="death-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="death-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('death')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('death', 'รายงานผู้ป่วยเสียชีวิต')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="death-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานผู้ป่วย Palliative care">
+                                <div class="card" id="card-palliative">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'palliative', 'รายงานผู้ป่วย Palliative care')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #fd79a8, #e84393);"><i class="fas fa-hand-holding-heart"></i></span> รายงานผู้ป่วย Palliative care</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="palliative-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="palliative-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="palliative-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('palliative')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('palliative', 'รายงานผู้ป่วย Palliative care')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="palliative-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานตัวชี้วัด HT urgency">
+                                <div class="card" id="card-ht-urgency">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'ht-urgency', 'รายงานตัวชี้วัด HT urgency')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #e17055, #d63031);"><i class="fas fa-tachometer-alt"></i></span> รายงานตัวชี้วัด HT urgency</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="ht-urgency-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="ht-urgency-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="ht-urgency-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('ht-urgency')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('ht-urgency', 'รายงานตัวชี้วัด HT urgency')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="ht-urgency-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานตัวชี้วัด Diarrhea">
+                                <div class="card" id="card-diarrhea">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'diarrhea', 'รายงานตัวชี้วัด Diarrhea')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #00b894, #00cec9);"><i class="fas fa-notes-medical"></i></span> รายงานตัวชี้วัด Diarrhea</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="diarrhea-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="diarrhea-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="diarrhea-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('diarrhea')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('diarrhea', 'รายงานตัวชี้วัด Diarrhea')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="diarrhea-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานตัวชี้วัดผู้ป่วยกลุ่มจิตเวช">
+                                <div class="card" id="card-psych">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'psych', 'ตัวชี้วัดผู้ป่วยกลุ่มจิตเวช')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #a29bfe, #6c5ce7);"><i class="fas fa-brain"></i></span> ตัวชี้วัดผู้ป่วยกลุ่มจิตเวช</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="psych-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="psych-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="psych-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('psych')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('psych', 'ตัวชี้วัดผู้ป่วยกลุ่มจิตเวช')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="psych-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานอุบัติการณ์">
+                                <div class="card" id="card-incident">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'incident', 'รายงานอุบัติการณ์')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #ffeaa7, #fdcb6e); color: #333;"><i class="fas fa-exclamation-circle"></i></span> รายงานอุบัติการณ์</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="incident-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="incident-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="incident-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('incident')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('incident', 'รายงานอุบัติการณ์')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="incident-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานปฏิเสธการรักษา">
+                                <div class="card" id="card-refuse">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'refuse', 'รายงานปฏิเสธการรักษา')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #b2bec3, #636e72);"><i class="fas fa-times-circle"></i></span> รายงานปฏิเสธการรักษา</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="refuse-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="refuse-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="refuse-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('refuse')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('refuse', 'รายงานปฏิเสธการรักษา')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="refuse-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานตัวชี้วัดผู้ป่วย Re-visit">
+                                <div class="card" id="card-revisit">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'revisit', 'ตัวชี้วัดผู้ป่วย Re-visit')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #74b9ff, #0984e3);"><i class="fas fa-redo"></i></span> ตัวชี้วัดผู้ป่วย Re-visit</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="revisit-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="revisit-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="revisit-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('revisit')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('revisit', 'ตัวชี้วัดผู้ป่วย Re-visit')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="revisit-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานสรุปความพึงพอใจผู้ใช้บริการ">
+                                <div class="card" id="card-satisfaction">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'satisfaction', 'สรุปความพึงพอใจผู้ใช้บริการ')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #ff7675, #d63031);"><i class="fas fa-smile"></i></span> สรุปความพึงพอใจผู้ใช้บริการ</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="satisfaction-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="satisfaction-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="satisfaction-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('satisfaction')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('satisfaction', 'สรุปความพึงพอใจผู้ใช้บริการ')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="satisfaction-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-4 report-grid-item" data-title="รายงานสรุปความพึงพอใจผู้ใช้บริการ(รายเดือน)">
+                                <div class="card" id="card-satisfaction-monthly">
+                                    <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'satisfaction-monthly', 'สรุปความพึงพอใจฯ(รายเดือน)')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                                        <h6><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #fab1a0, #e17055);"><i class="fas fa-calendar-check"></i></span> สรุปความพึงพอใจฯ(รายเดือน)</h6>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-center">
+                                        <div class="mb-2 report-inputs">
+                                            <input type="url" class="form-control mb-2" id="satisfaction-monthly-link" placeholder="ลิงค์รายงาน...">
+                                            <input type="text" class="form-control mb-2" id="satisfaction-monthly-recorder" placeholder="ชื่อผู้บันทึก...">
+                                            <input type="email" class="form-control mb-2" id="satisfaction-monthly-email" placeholder="อีเมลผู้รับผิดชอบ...">
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1" onclick="updateReport('satisfaction-monthly')"><i class="fas fa-save"></i> บันทึก</button>
+                                            <button class="btn btn-warning btn-sm" onclick="prepareNotify('satisfaction-monthly', 'สรุปความพึงพอใจผู้ใช้บริการ(รายเดือน)')"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                        </div>
+                                        <div id="satisfaction-monthly-preview" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div> <hr class="my-5" style="border-top: 2px dashed rgba(255,255,255,0.5);">
+                        
+                        <h5 class="mb-4 fw-bold text-dark border-bottom pb-2 border-white"><i class="fas fa-magic text-secondary"></i> สร้างรายงานเพิ่ม</h5>
+                        <div id="customReportsContainer" class="row">
+                            </div>
+                        
+                        <div class="card mb-4" id="card-add-custom-report" style="border: 2px dashed rgba(255,255,255,0.8); background: rgba(255,255,255,0.2);">
+                            <div class="card-header bg-transparent border-bottom-0 pt-4 text-center d-block">
+                                <h5 class="w-100 justify-content-center"><i class="fas fa-plus-circle text-primary"></i> สร้างรายงานใหม่</h5>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="row g-2 mb-3">
+                                    <div class="col-md-3">
+                                        <input type="text" class="form-control bg-white" id="customReportTitleInput" placeholder="ชื่อรายงาน...">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="url" class="form-control bg-white" id="customReportLinkInput" placeholder="ลิงค์รายงาน URL...">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control bg-white" id="customReportRecorderInput" placeholder="ชื่อผู้บันทึก...">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="email" class="form-control bg-white" id="customReportEmailInput" placeholder="อีเมลผู้รับผิดชอบ...">
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <button class="btn btn-primary px-5" id="addCustomReportButton" onclick="addCustomReport()">
+                                        <i class="fas fa-plus"></i> บันทึก
+                                    </button>
+                                    <button class="btn btn-secondary px-4 d-none" id="cancelEditCustomReportButton" onclick="cancelEditCustomReport()">
+                                        <i class="fas fa-times"></i> ยกเลิก
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="supervisorSettingsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-panel" style="background: rgba(255, 255, 255, 0.95); border-radius: 20px;">
+                <div class="modal-header border-bottom-0 pt-4 pb-0">
+                    <h5 class="modal-title fw-bold text-primary w-100 text-center">
+                        <i class="fas fa-user-tie fs-3 mb-2 d-block"></i> ตั้งค่าข้อมูลผู้บังคับบัญชา
+                    </h5>
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4 px-4">
+                    <p class="text-muted mb-4">กำหนดชื่อและอีเมลของผู้บังคับบัญชา เพื่อใช้สำหรับการส่งรายงานเป็นประจำ</p>
+                    <div class="text-start mb-3">
+                        <label class="form-label fw-bold text-dark"><i class="fas fa-signature"></i> ชื่อ - นามสกุล หรือ ตำแหน่ง</label>
+                        <input type="text" class="form-control" id="settingSupName" placeholder="เช่น หัวหน้าตึก, พี่พยาบาลเวร...">
+                    </div>
+                    <div class="text-start">
+                        <label class="form-label fw-bold text-dark"><i class="fas fa-envelope"></i> Email ผู้รับรายงาน</label>
+                        <input type="email" class="form-control" id="settingSupEmail" placeholder="เช่น boss@hospital.com">
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-primary px-5 rounded-pill shadow-sm" onclick="saveSupervisorSettings()">บันทึกข้อมูล</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmSendReportModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-panel" style="background: rgba(255, 255, 255, 0.95); border-radius: 20px;">
+                <div class="modal-header border-bottom-0 pt-4 pb-0">
+                    <h5 class="modal-title fw-bold text-info w-100 text-center">
+                        <i class="fas fa-paper-plane fs-3 mb-2 d-block"></i> ยืนยันการส่งรายงาน
+                    </h5>
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4 px-4">
+                    <p class="mb-2 fs-5">ยืนยันส่ง <strong><span id="confirmSendReportName" class="text-primary"></span></strong></p>
+                    <p class="mb-4">ไปยัง Email: <strong><span id="confirmSendEmailText" class="text-danger"></span></strong></p>
+                    <div class="alert alert-light border text-start" style="font-size: 0.9rem;">
+                        <i class="fas fa-info-circle text-info"></i> ระบบจะทำการส่งอีเมลแจ้งหัวหน้าของท่านทันที
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-info text-white px-5 rounded-pill shadow-sm" onclick="confirmSendReport()"><i class="fas fa-paper-plane"></i> ส่งรายงาน</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmNotifyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-panel" style="background: rgba(255, 255, 255, 0.95); border-radius: 20px;">
+                <div class="modal-header border-bottom-0 pt-4 pb-0">
+                    <h5 class="modal-title fw-bold text-warning w-100 text-center" style="color: #d35400 !important;">
+                        <i class="fas fa-bell fs-3 mb-2 d-block"></i> ยืนยันการส่งแจ้งเตือน
+                    </h5>
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4 px-4">
+                    <p class="mb-2 fs-5">ยืนยันส่ง Email แจ้งเตือนไปยัง Email</p>
+                    <p class="mb-4"><strong><span id="confirmNotifyEmailText" class="text-danger"></span></strong></p>
+                    <p class="mb-2 text-primary fw-bold" id="confirmNotifyReportName"></p>
+                </div>
+                <div class="modal-footer border-top-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-warning fw-bold px-5 rounded-pill shadow-sm" onclick="confirmNotify()"><i class="fas fa-paper-plane"></i> ส่งแจ้งเตือน</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="manualNotifyAllModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-panel" style="background: rgba(255, 255, 255, 0.95); border-radius: 20px;">
+                <div class="modal-header border-bottom-0 pt-4 pb-0">
+                    <h5 class="modal-title fw-bold w-100 text-center" style="color: #d35400;">
+                        <i class="fas fa-bullhorn fs-3 mb-2 d-block text-warning"></i> แจ้งเตือนทั้งระบบ
+                    </h5>
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-3 px-4">
+                    <p class="fs-5 mb-2">ส่งแจ้งเตือนไปยังผู้รับผิดชอบรายงาน <strong class="text-danger">ทุกคน</strong></p>
+                    <p class="text-muted" style="font-size: 0.9rem;">ระบบจะรวบรวมรายงานแยกตามบุคคล และส่งอีเมลแจ้งเตือนให้แต่ละคนพร้อมแนบลิงก์ให้โดยอัตโนมัติ</p>
+                </div>
+                <div class="modal-footer border-top-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-warning px-4 rounded-pill shadow-sm fw-bold" onclick="executeNotifyAll()"><i class="fas fa-paper-plane"></i> ส่งแจ้งเตือนทั้งหมด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="autoNotifyModal" tabindex="-1" aria-labelledby="autoNotifyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-panel" style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; border: 2px solid var(--primary-color);">
+                <div class="modal-header border-bottom-0 pt-4 pb-0">
+                    <h5 class="modal-title fw-bold text-primary w-100 text-center" id="autoNotifyModalLabel">
+                        <i class="fas fa-bullhorn fs-3 mb-2 d-block text-warning"></i> รอบแจ้งเตือนอัพเดทรายงาน
+                    </h5>
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-3">
+                    <p class="fs-5 mb-2">วันนี้เป็นวันที่ <strong class="text-danger" id="autoNotifyDaySpan"></strong> ของเดือน</p>
+                    <p class="text-muted">ระบบพร้อมส่งอีเมลแจ้งเตือนไปยังผู้รับผิดชอบรายงานทุกคน เพื่อขอให้อัพเดทข้อมูลประจำรอบครับ</p>
+                </div>
+                <div class="modal-footer border-top-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">ปิดไว้ก่อน</button>
+                    <button type="button" class="btn btn-warning px-4 rounded-pill shadow-sm fw-bold" onclick="sendBatchEmails()"><i class="fas fa-paper-plane"></i> ส่งอีเมลแจ้งเตือนทั้งหมด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateConfirmModal" tabindex="-1" aria-labelledby="updateConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-panel" style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <div class="modal-header border-bottom-0 pt-4 pb-0">
+                    <h5 class="modal-title fw-bold text-primary w-100 text-center" id="updateConfirmModalLabel">
+                        <i class="fas fa-sync-alt fs-4 mb-2 d-block"></i> ยืนยันการอัพเดทรายงาน
+                    </h5>
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <h4 id="updateModalTime" class="mb-2 fw-bold" style="color: #2c3e50;"></h4>
+                    <p id="updateModalDate" class="text-muted mb-0 fs-5"></p>
+                </div>
+                <div class="modal-footer border-top-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-primary px-5 rounded-pill shadow-sm" id="btnConfirmUpdate">ยืนยัน</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="floating-btn" onclick="scrollToTop()" title="กลับสู่ด้านบน">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <div id="hoverPreviewBox">
+        <header>
+            <i class="fas fa-eye"></i> <span id="hp-title">Preview</span>
+        </header>
+        <div style="position:relative; flex-grow:1;">
+            <div style="position:absolute; inset:0; display:flex; justify-content:center; align-items:center; color:#888; z-index:-1;">
+                <i class="fas fa-spinner fa-spin me-2"></i> กำลังโหลดตัวอย่าง...
+            </div>
+            <iframe id="hp-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          // นำ Public Key มาใส่แทนข้อความด้านล่างนี้
+          emailjs.init("s_NthhZAulL_00uMF");
+       })();
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        let app, db, auth;
+        const FIXED_USER_ID = '06984879360549899833';
+        let userId = FIXED_USER_ID; 
+        let editingCustomReportId = null;
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAyjl-UM481lbKzHRb8R6fTx8x6pG_kiaY",
+            authDomain: "ipdreport-20a3e.firebaseapp.com",
+            projectId: "ipdreport-20a3e",
+            storageBucket: "ipdreport-20a3e.firebasestorage.app",
+            messagingSenderId: "277517698068",
+            appId: "1:277517698068:web:f7d1e17e681b9385c4d301"
+        };
+        const appId = "ipdreport-20a3e"; 
+        const initialAuthToken = null;
+
+        let registryLinksData = [];
+        let fixedReportsData = {}; 
+        let customReportsData = []; 
+        let supervisorData = { name: '', email: '' };
+        let pendingUpdateType = null;
+        let pendingUpdateData = null;
+        let updateModalInstance = null;
+        let currentReportToSend = null;
+        let currentNotifyToSend = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    document.getElementById('userIdDisplay').innerHTML = `<i class="fas fa-id-badge"></i> ID: ${FIXED_USER_ID}`;
+                    loadData();
+                });
+
+                // Check for auto-notification dates (5th and 15th)
+                checkAutoNotification();
+
+                // Initialize modal confirm action
+                document.getElementById('btnConfirmUpdate').addEventListener('click', async () => {
+                    if (!pendingUpdateType || !db) return;
+                    try {
+                        if (pendingUpdateType.startsWith('custom_')) {
+                            const actualId = pendingUpdateType.replace('custom_', '');
+                            await setDoc(doc(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/customReports`, actualId), {
+                                title: pendingUpdateData.title,
+                                url: pendingUpdateData.url, 
+                                recorder: pendingUpdateData.recorder, 
+                                email: pendingUpdateData.email || '',
+                                timestamp: new Date().toLocaleString('th-TH')
+                            }, { merge: true });
+                        } else {
+                            await setDoc(doc(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/fixedReports`, pendingUpdateType), {
+                                url: pendingUpdateData.url, 
+                                recorder: pendingUpdateData.recorder, 
+                                email: pendingUpdateData.email || '',
+                                timestamp: new Date().toLocaleString('th-TH')
+                            }, { merge: true });
+                        }
+                        
+                        showNotification('อัพเดทข้อมูลเรียบร้อย', 'success');
+                        if(updateModalInstance) updateModalInstance.hide();
+                    } catch (e) { 
+                        console.error(e); 
+                        showNotification('ข้อผิดพลาดในการอัพเดท', 'danger');
+                    }
+                });
+
+            } catch (error) {
+                console.error("Firebase init error:", error);
+            }
+        });
+
+        async function loadData() {
+            if (!db) return;
+
+            // Load Supervisor Settings
+            const supervisorColRef = doc(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/settings`, 'supervisor');
+            onSnapshot(supervisorColRef, (docSnap) => {
+                if(docSnap.exists()){
+                    supervisorData = docSnap.data();
+                    document.getElementById('settingSupName').value = supervisorData.name || '';
+                    document.getElementById('settingSupEmail').value = supervisorData.email || '';
+                }
+            });
+
+            const registryColRef = collection(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/registryLinks`);
+            onSnapshot(registryColRef, (snapshot) => {
+                registryLinksData = [];
+                snapshot.forEach(doc => registryLinksData.push({ id: doc.id, ...doc.data() }));
+                renderRegistryLinks();
+                renderTableOfContents();
+            });
+
+            const fixedReportsColRef = collection(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/fixedReports`);
+            onSnapshot(fixedReportsColRef, (snapshot) => {
+                fixedReportsData = {};
+                snapshot.forEach(doc => fixedReportsData[doc.id] = doc.data());
+                renderAllFixedReportPreviews();
+                renderTableOfContents();
+            });
+
+            const customReportsColRef = collection(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/customReports`);
+            onSnapshot(customReportsColRef, (snapshot) => {
+                customReportsData = [];
+                snapshot.forEach(doc => customReportsData.push({ id: doc.id, ...doc.data() }));
+                renderCustomReports();
+                renderTableOfContents();
+            });
+        }
+
+        // --- Supervisor & Send Report Features --- //
+
+        window.saveSupervisorSettings = async function() {
+            const name = document.getElementById('settingSupName').value;
+            const email = document.getElementById('settingSupEmail').value;
+            if(!email) return showNotification('กรุณาระบุอีเมลผู้รับรายงาน', 'warning');
+            
+            await setDoc(doc(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/settings`, 'supervisor'), {
+                name: name,
+                email: email
+            }, { merge: true });
+            
+            bootstrap.Modal.getInstance(document.getElementById('supervisorSettingsModal')).hide();
+            showNotification('บันทึกข้อมูลผู้บังคับบัญชาเรียบร้อย', 'success');
+        }
+
+        window.prepareSendReport = function(type, reportTitle) {
+            if (!supervisorData || !supervisorData.email) {
+                showNotification('กรุณาตั้งค่าอีเมลผู้บังคับบัญชาก่อนกดส่งรายงาน', 'warning');
+                new bootstrap.Modal(document.getElementById('supervisorSettingsModal')).show();
+                return;
+            }
+
+            let url = '';
+            if (type.startsWith('custom_')) {
+                const id = type.split('_')[1];
+                const r = customReportsData.find(x => x.id === id);
+                if (r) url = r.url;
+            } else {
+                url = document.getElementById(`${type}-link`) ? document.getElementById(`${type}-link`).value : '';
+                if (!url && fixedReportsData[type]) url = fixedReportsData[type].url;
+            }
+
+            if (!url) {
+                return showNotification('กรุณาบันทึกลิงก์รายงานก่อนกดส่ง', 'warning');
+            }
+
+            currentReportToSend = { title: reportTitle, url: url };
+            
+            document.getElementById('confirmSendEmailText').innerText = supervisorData.email;
+            document.getElementById('confirmSendReportName').innerText = reportTitle;
+
+            new bootstrap.Modal(document.getElementById('confirmSendReportModal')).show();
+        }
+
+        window.confirmSendReport = function() {
+            if (!currentReportToSend) return;
+
+            const d = new Date();
+            const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const currentMonth = monthNames[d.getMonth()] + " " + (d.getFullYear() + 543);
+            
+            const subject = `ส่งรายงาน: ${currentReportToSend.title} ประจำเดือน ${currentMonth}`;
+            const body = `เรียน ${supervisorData.name || 'ผู้บังคับบัญชา'},\n\nขอส่งรายงาน "${currentReportToSend.title}" ประจำเดือน ${currentMonth}\n\nสามารถตรวจสอบรายละเอียดได้ที่ลิงก์ด้านล่างนี้:\n${currentReportToSend.url}\n\nจึงเรียนมาเพื่อโปรดพิจารณา\nขอบคุณครับ/ค่ะ`;
+            
+            bootstrap.Modal.getInstance(document.getElementById('confirmSendReportModal')).hide();
+            showNotification('<i class="fas fa-spinner fa-spin"></i> กำลังส่งรายงานให้หัวหน้า...', 'info');
+
+            emailjs.send("service_uorvopb", "template_409x8dp", {
+                to_email: supervisorData.email,
+                subject: subject,
+                message: body
+            }).then(
+                function(response) { showNotification('<i class="fas fa-check-circle"></i> ส่งรายงานสำเร็จ!', 'success'); },
+                function(error) { showNotification('<i class="fas fa-times-circle"></i> ส่งรายงานล้มเหลว', 'danger'); console.error(error); }
+            );
+        }
+
+        // --- Notify Responsible Person Logic --- //
+        window.prepareNotify = function(type, reportTitle) {
+            let email = document.getElementById(`${type}-email`) ? document.getElementById(`${type}-email`).value : '';
+            let url = document.getElementById(`${type}-link`) ? document.getElementById(`${type}-link`).value : '';
+            
+            if (type.startsWith('custom_')) {
+                const id = type.split('_')[1];
+                const r = customReportsData.find(x => x.id === id);
+                if (r) { email = r.email; url = r.url; }
+            } else {
+                if (fixedReportsData[type]) {
+                    if(!email) email = fixedReportsData[type].email;
+                    if(!url) url = fixedReportsData[type].url;
+                }
+            }
+
+            if (!email) {
+                return showNotification('กรุณาระบุอีเมลผู้รับผิดชอบรายงานในช่องกรอกข้อมูล', 'warning');
+            }
+
+            currentNotifyToSend = { title: reportTitle, url: url, email: email };
+            document.getElementById('confirmNotifyEmailText').innerText = email;
+            document.getElementById('confirmNotifyReportName').innerText = reportTitle;
+
+            new bootstrap.Modal(document.getElementById('confirmNotifyModal')).show();
+        }
+
+        window.confirmNotify = function() {
+            if (!currentNotifyToSend) return;
+            
+            const subject = `แจ้งเตือน: ขอให้ท่านอัพเดท ${currentNotifyToSend.title}`;
+            const body = `เรียน ผู้รับผิดชอบรายงาน,\n\nขอแจ้งเตือนให้ท่านทำการอัพเดทรายงานดังต่อไปนี้:\n\nชื่อรายงาน: ${currentNotifyToSend.title}\n\nลิงก์สำหรับเข้าจัดการ: ${currentNotifyToSend.url || 'ยังไม่ได้ระบุลิงก์ในระบบ'}\n\nขอบคุณครับ`;
+            
+            bootstrap.Modal.getInstance(document.getElementById('confirmNotifyModal')).hide();
+            showNotification('<i class="fas fa-spinner fa-spin"></i> กำลังส่งแจ้งเตือน...', 'info');
+
+            emailjs.send("service_uorvopb", "template_409x8dp", {
+                to_email: currentNotifyToSend.email,
+                subject: subject,
+                message: body
+            }).then(
+                function(response) { showNotification('<i class="fas fa-check-circle"></i> ส่งแจ้งเตือนสำเร็จ!', 'success'); },
+                function(error) { showNotification('<i class="fas fa-times-circle"></i> ส่งแจ้งเตือนล้มเหลว', 'danger'); console.error(error); }
+            );
+        }
+
+        // --- Hover Preview Logic --- //
+        let previewTimeout;
+        
+        window.showPreview = function(event, type, title) {
+            let url = '';
+            // Check if URL is saved depending on type
+            if (type.startsWith('custom_')) {
+                const id = type.split('_')[1];
+                const r = customReportsData.find(x => x.id === id);
+                if (r) url = r.url;
+            } else {
+                if (fixedReportsData[type]) url = fixedReportsData[type].url;
+            }
+
+            // Don't show preview if no url is saved yet
+            if (!url) return; 
+
+            clearTimeout(previewTimeout);
+            const box = document.getElementById('hoverPreviewBox');
+            const iframe = document.getElementById('hp-iframe');
+            document.getElementById('hp-title').innerText = title;
+            
+            // Only update src if it changed to prevent reloading same iframe rapidly
+            if(iframe.src !== url) iframe.src = url;
+
+            box.style.display = 'flex';
+            // Slight delay to allow CSS transition
+            setTimeout(() => box.classList.add('show'), 10);
+            
+            positionPreviewBox(event);
+        }
+
+        window.hidePreview = function() {
+            const box = document.getElementById('hoverPreviewBox');
+            box.classList.remove('show');
+            // Wait for fade out transition before hiding completely
+            previewTimeout = setTimeout(() => {
+                box.style.display = 'none';
+                document.getElementById('hp-iframe').src = ''; // Clear memory
+            }, 200);
+        }
+
+        window.positionPreviewBox = function(e) {
+            const box = document.getElementById('hoverPreviewBox');
+            if (box.style.display === 'none') return;
+
+            let x = e.clientX + 20; // Offset from cursor
+            let y = e.clientY + 20;
+
+            // Keep within bounds
+            const rect = box.getBoundingClientRect();
+            if (x + rect.width > window.innerWidth) x = e.clientX - rect.width - 20;
+            if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height - 20;
+
+            box.style.left = x + 'px';
+            box.style.top = y + 'px';
+        }
+
+        // --- Core UI Logic for Filtering and Isolating --- //
+        window.isolateReport = function(cardId) {
+            const reportsTabButton = document.querySelector('#reports-tab');
+            const bsTab = new bootstrap.Tab(reportsTabButton);
+            bsTab.show();
+
+            document.getElementById('searchInput').value = '';
+            const allItems = document.querySelectorAll('.report-grid-item');
+            allItems.forEach(item => item.style.display = 'none');
+
+            const targetCard = document.getElementById(cardId);
+            if (targetCard) {
+                targetCard.closest('.report-grid-item').style.display = 'block';
+                document.getElementById('clearSearchBtn').style.display = 'flex';
+                setTimeout(() => { targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200);
+            }
+
+            document.querySelectorAll('.toc-link').forEach(link => link.classList.remove('active-toc'));
+            const activeLink = document.querySelector(`.toc-link[onclick="isolateReport('${cardId}')"]`);
+            if(activeLink) activeLink.classList.add('active-toc');
+        }
+
+        window.filterReports = function() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const allItems = document.querySelectorAll('.report-grid-item');
+            const clearBtn = document.getElementById('clearSearchBtn');
+
+            if (query === '') {
+                window.showAllReports();
+                return;
+            }
+
+            clearBtn.style.display = 'flex';
+            document.querySelectorAll('.toc-link').forEach(link => link.classList.remove('active-toc'));
+
+            allItems.forEach(item => {
+                const title = item.getAttribute('data-title') ? item.getAttribute('data-title').toLowerCase() : '';
+                if (title.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        window.showAllReports = function() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearSearchBtn').style.display = 'none';
+            document.querySelectorAll('.report-grid-item').forEach(item => item.style.display = 'block');
+            document.querySelectorAll('.toc-link').forEach(link => link.classList.remove('active-toc'));
+        }
+
+        function parseMonthYearToDate(monthYearString) {
+            const thaiMonths = {'มกราคม':0, 'ม.ค.':0, 'กุมภาพันธ์':1, 'ก.พ.':1, 'มีนาคม':2, 'มี.ค.':2, 'เมษายน':3, 'เม.ย.':3, 'พฤษภาคม':4, 'พ.ค.':4, 'มิถุนายน':5, 'มิ.ย.':5, 'กรกฎาคม':6, 'ก.ค.':6, 'สิงหาคม':7, 'ส.ค.':7, 'กันยายน':8, 'ก.ย.':8, 'ตุลาคม':9, 'ต.ค.':9, 'พฤศจิกายน':10, 'พ.ย.':10, 'ธันวาคม':11, 'ธ.ค.':11};
+            const parts = monthYearString.split(/\s+/);
+            if (parts.length >= 2) {
+                let m = thaiMonths[parts[0]];
+                let y = parseInt(parts[parts.length - 1]);
+                if (m !== undefined && !isNaN(y)) {
+                    if (y > 2500) y -= 543;
+                    return new Date(y, m, 1);
+                }
+            }
+            return null;
+        }
+
+        window.addRegistryLink = async function() {
+            const link = document.getElementById('registryLink').value;
+            const name = document.getElementById('registryButtonName').value;
+            if (!link || !name) return showNotification('กรุณากรอกลิงค์และชื่อรายการให้ครบถ้วน', 'warning');
+            if (!db) return;
+
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/registryLinks`), {
+                    url: link, name: name, timestamp: new Date().toLocaleString('th-TH')
+                });
+                document.getElementById('registryLink').value = '';
+                document.getElementById('registryButtonName').value = '';
+                showNotification('เพิ่มรายการเรียบร้อยแล้ว', 'success');
+            } catch (e) { showNotification(`ข้อผิดพลาด: ${e.message}`, 'danger'); }
+        }
+
+        window.renderRegistryLinks = function() {
+            const container = document.getElementById('registryLinks');
+            container.innerHTML = '';
+            
+            registryLinksData.sort((a, b) => {
+                const dA = parseMonthYearToDate(a.name), dB = parseMonthYearToDate(b.name);
+                if (dA && dB) return dB.getTime() - dA.getTime();
+                if (dA) return -1; if (dB) return 1;
+                return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+            });
+
+            registryLinksData.forEach(link => {
+                const div = document.createElement('div');
+                div.className = 'link-item d-flex justify-content-between align-items-center flex-wrap';
+                div.innerHTML = `
+                    <div class="mb-2 mb-md-0 d-flex align-items-center gap-3">
+                        <a href="${link.url}" target="_blank" class="btn btn-primary px-4 fw-bold">
+                            <i class="fas fa-external-link-alt me-2"></i> ${link.name}
+                        </a>
+                        <small class="text-muted"><i class="far fa-clock"></i> ${link.timestamp.split(' ')[0]}</small>
+                    </div>
+                    <div class="btn-group shadow-sm">
+                        <button class="btn btn-light border" onclick="previewLink('${link.url}', '${link.name}')"><i class="fas fa-eye text-info"></i></button>
+                        <button class="btn btn-light border" onclick="deleteRegistryLink('${link.id}')"><i class="fas fa-trash text-danger"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.deleteRegistryLink = async function(id) {
+            if(confirm('คุณต้องการลบรายการนี้ใช่หรือไม่?')) {
+                if(!db) return;
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/registryLinks`, id));
+            }
+        }
+
+        // --- Notification Features --- //
+
+        window.checkAutoNotification = function() {
+            const today = new Date();
+            const date = today.getDate();
+            const monthYear = `${today.getMonth()}_${today.getFullYear()}`;
+            
+            // Trigger on 5th and 15th
+            if (date === 5 || date === 15) {
+                const storageKey = `autoNotifySent_${date}_${monthYear}`;
+                // Check if we already showed it today
+                if (!localStorage.getItem(storageKey)) {
+                    document.getElementById('autoNotifyDaySpan').innerText = date;
+                    setTimeout(() => {
+                        const modal = new bootstrap.Modal(document.getElementById('autoNotifyModal'));
+                        modal.show();
+                        // Mark as shown so it doesn't spam on refresh
+                        localStorage.setItem(storageKey, 'true');
+                    }, 2000);
+                }
+            }
+        }
+
+        // --- ฟังก์ชันจัดกลุ่มรายงานตามอีเมล ---
+        function groupReportsByEmail() {
+            let notificationsByEmail = {};
+
+            // ชื่อรายงานสำหรับ Fixed Reports
+            const fixedReportNames = {
+                'nursing': 'รายงานสรุปกิจกรรมการพยาบาล', 'risk': 'รายงานความเสี่ยง',
+                'refer': 'รายงานผู้ป่วยที่ได้รับการส่งต่อ (Refer)', 'wound': 'รายงานแผลกดทับ',
+                'wound-follow': 'รายละเอียดการติดตามแผลกดทับ', 'death': 'รายงานผู้ป่วยเสียชีวิต',
+                'palliative': 'รายงานผู้ป่วย Palliative care', 'ht-urgency': 'รายงานตัวชี้วัด HT urgency',
+                'diarrhea': 'รายงานตัวชี้วัด Diarrhea', 'psych': 'ตัวชี้วัดผู้ป่วยกลุ่มจิตเวช',
+                'incident': 'รายงานอุบัติการณ์', 'refuse': 'รายงานปฏิเสธการรักษา',
+                'revisit': 'ตัวชี้วัดผู้ป่วย Re-visit', 'satisfaction': 'สรุปความพึงพอใจผู้ใช้บริการ',
+                'satisfaction-monthly': 'สรุปความพึงพอใจผู้ใช้บริการ(รายเดือน)'
+            };
+
+            // ดึงข้อมูล Fixed Reports
+            for (const [key, data] of Object.entries(fixedReportsData)) {
+                if (data.email) {
+                    if (!notificationsByEmail[data.email]) notificationsByEmail[data.email] = [];
+                    notificationsByEmail[data.email].push({
+                        title: fixedReportNames[key] || 'รายงาน',
+                        url: data.url || 'ยังไม่ได้ระบุลิงก์'
+                    });
+                }
+            }
+
+            // ดึงข้อมูล Custom Reports
+            customReportsData.forEach(r => {
+                if (r.email) {
+                    if (!notificationsByEmail[r.email]) notificationsByEmail[r.email] = [];
+                    notificationsByEmail[r.email].push({
+                        title: r.title,
+                        url: r.url || 'ยังไม่ได้ระบุลิงก์'
+                    });
+                }
+            });
+
+            return notificationsByEmail;
+        }
+
+        // --- แจ้งเตือนแบบ Auto (เด้งขึ้นมาวันที่ 5 หรือ 15) ---
+        window.sendBatchEmails = function() {
+            const notificationsByEmail = groupReportsByEmail();
+
+            if (Object.keys(notificationsByEmail).length === 0) {
+                showNotification('ไม่มีอีเมลผู้รับผิดชอบที่ถูกบันทึกไว้ในระบบเลย', 'warning');
+                bootstrap.Modal.getInstance(document.getElementById('autoNotifyModal')).hide();
+                return;
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById('autoNotifyModal')).hide();
+            showNotification('<i class="fas fa-spinner fa-spin"></i> กำลังส่งแจ้งเตือนอัตโนมัติแยกตามบุคคล...', 'info');
+
+            let promises = [];
+            for (const [email, reports] of Object.entries(notificationsByEmail)) {
+                let reportListText = reports.map(r => `- ชื่อรายงาน: ${r.title}\n  ลิงก์เข้าจัดการ: ${r.url}`).join('\n\n');
+                
+                const subject = `แจ้งเตือนรอบประจำเดือน: ถึงรอบอัพเดทรายงาน (วันที่ ${new Date().getDate()})`;
+                const body = `เรียน ผู้รับผิดชอบรายงาน,\n\nขณะนี้ถึงรอบการรายงานประจำเดือนแล้ว (วันที่ 5 และ 15)\n\nขอให้ท่านทำการอัพเดทข้อมูลรายงานในความรับผิดชอบของท่านให้เป็นปัจจุบัน ดังรายการต่อไปนี้:\n\n${reportListText}\n\nขอบคุณครับ`;
+
+                let p = emailjs.send("service_uorvopb", "template_409x8dp", {
+                    to_email: email,
+                    subject: subject,
+                    message: body
+                });
+                promises.push(p);
+            }
+
+            Promise.all(promises).then(
+                function(responses) { showNotification('<i class="fas fa-check-circle"></i> ส่งแจ้งเตือนอัตโนมัติสำเร็จ!', 'success'); },
+                function(error) { showNotification('<i class="fas fa-times-circle"></i> ส่งแจ้งเตือนล้มเหลว', 'danger'); console.error(error); }
+            );
+        }
+
+        window.prepareNotifyAll = function() {
+            new bootstrap.Modal(document.getElementById('manualNotifyAllModal')).show();
+        }
+
+        // --- แจ้งเตือนแบบ Manual (กดจากปุ่มตั้งค่า) ---
+        window.executeNotifyAll = function() {
+            const notificationsByEmail = groupReportsByEmail();
+
+            if (Object.keys(notificationsByEmail).length === 0) {
+                showNotification('ไม่มีอีเมลผู้รับผิดชอบที่ถูกบันทึกไว้ในระบบเลย', 'warning');
+                bootstrap.Modal.getInstance(document.getElementById('manualNotifyAllModal')).hide();
+                return;
+            }
+
+            const d = new Date();
+            const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const currentMonth = monthNames[d.getMonth()] + " " + (d.getFullYear() + 543);
+
+            bootstrap.Modal.getInstance(document.getElementById('manualNotifyAllModal')).hide();
+            showNotification('<i class="fas fa-spinner fa-spin"></i> กำลังส่งแจ้งเตือนแยกตามบุคคล...', 'info');
+
+            let promises = [];
+            for (const [email, reports] of Object.entries(notificationsByEmail)) {
+                let reportListText = reports.map(r => `- ชื่อรายงาน: ${r.title}\n  ลิงก์เข้าจัดการ: ${r.url}`).join('\n\n');
+                
+                const subject = `แจ้งเตือน: ขอให้ท่านอัพเดทรายงานประจำเดือน ${currentMonth}`;
+                const body = `เรียน ผู้รับผิดชอบรายงาน,\n\nขอแจ้งเตือนให้ท่านทำการอัพเดทรายงานในความรับผิดชอบของท่านประจำเดือน ${currentMonth} ให้เป็นปัจจุบัน ดังรายการต่อไปนี้:\n\n${reportListText}\n\nขอบคุณครับ`;
+
+                let p = emailjs.send("service_uorvopb", "template_409x8dp", {
+                    to_email: email,
+                    subject: subject,
+                    message: body
+                });
+                promises.push(p);
+            }
+
+            Promise.all(promises).then(
+                function(responses) { showNotification('<i class="fas fa-check-circle"></i> ส่งแจ้งเตือนพร้อมลิงก์สำเร็จทุกคน!', 'success'); },
+                function(error) { showNotification('<i class="fas fa-times-circle"></i> พบข้อผิดพลาดในการส่งบางรายการ', 'danger'); console.error(error); }
+            );
+        }
+
+        // --- End Notification Features --- //
+
+        window.updateReport = function(type) {
+            const link = document.getElementById(`${type}-link`).value;
+            const rec = document.getElementById(`${type}-recorder`).value;
+            const email = document.getElementById(`${type}-email`).value;
+            if (!link || !rec) return showNotification('กรุณากรอกลิงค์และชื่อผู้บันทึกให้ครบถ้วน', 'warning');
+            
+            pendingUpdateType = type;
+            pendingUpdateData = { url: link, recorder: rec, email: email };
+            showUpdateModal();
+        }
+
+        window.quickUpdateReport = function(type) {
+            pendingUpdateType = type;
+            pendingUpdateData = fixedReportsData[type];
+            showUpdateModal();
+        }
+
+        window.showUpdateModal = function() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.';
+            const dateStr = now.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            document.getElementById('updateModalTime').innerText = `อัพเดทรายงานเวลา ${timeStr}`;
+            document.getElementById('updateModalDate').innerText = `ปัจจุบัน วันที่ ${dateStr}`;
+            
+            if (!updateModalInstance) {
+                updateModalInstance = new bootstrap.Modal(document.getElementById('updateConfirmModal'));
+            }
+            updateModalInstance.show();
+        }
+
+        window.renderReportPreview = function(type) {
+            const prev = document.getElementById(`${type}-preview`);
+            const inputs = document.querySelector(`#${type}-link`)?.closest('.report-inputs');
+            const data = fixedReportsData[type];
+            if (data) {
+                if (inputs) {
+                    inputs.style.display = 'none';
+                    // ซ่อนปุ่ม บันทึก/แจ้งเตือน เดิมออกเมื่อแสดงกล่องสีเขียว
+                    const actionBtns = inputs.nextElementSibling;
+                    if (actionBtns) {
+                        actionBtns.classList.remove('d-flex');
+                        actionBtns.style.display = 'none';
+                    }
+                }
+                
+                // Get title from UI for notification button
+                const titleElement = document.querySelector(`#card-${type} .card-header h6`);
+                const reportTitle = titleElement ? titleElement.innerText.trim() : 'รายงาน';
+                
+                prev.innerHTML = `
+                    <div class="alert alert-success d-flex flex-column mb-0">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <span class="badge bg-success mb-1"><i class="fas fa-check-circle"></i> บันทึกข้อมูลแล้ว</span>
+                                <div style="font-size:0.85rem;" class="text-muted"><i class="fas fa-user-edit"></i> ผู้บันทึก: ${data.recorder}</div>
+                                ${data.email ? `<div style="font-size:0.85rem;" class="text-muted"><i class="fas fa-envelope"></i> รับผิดชอบโดย: ${data.email}</div>` : ''}
+                                <div style="font-size:0.85rem;" class="text-muted"><i class="far fa-clock"></i> อัพเดทล่าสุด: <span class="fw-bold">${data.timestamp}</span></div>
+                            </div>
+                        </div>
+                        <div class="btn-group mt-2 flex-wrap gap-1">
+                            <button class="btn btn-sm btn-primary border-0 shadow-sm px-3 rounded" onclick="quickUpdateReport('${type}')" title="อัพเดทเวลาเป็นปัจจุบัน"><i class="fas fa-sync-alt"></i> อัพเดทเวลา</button>
+                            <button class="btn btn-sm btn-warning border-0 shadow-sm px-3 rounded" onclick="prepareNotify('${type}', '${reportTitle}')" title="แจ้งเตือนผู้รับผิดชอบ"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                            <button class="btn btn-sm btn-info text-white border-0 shadow-sm px-3 rounded" onclick="prepareSendReport('${type}', '${reportTitle}')" title="ส่งรายงานให้ผู้บังคับบัญชา"><i class="fas fa-paper-plane"></i> ส่งรายงาน</button>
+                            <a href="${data.url}" target="_blank" class="btn btn-sm btn-light border rounded"><i class="fas fa-external-link-alt text-primary"></i> เปิด</a>
+                            <button class="btn btn-sm btn-light border rounded" onclick="editReport('${type}')"><i class="fas fa-edit text-secondary"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        window.renderAllFixedReportPreviews = function() {
+            const types = ['nursing', 'risk', 'refer', 'wound', 'wound-follow', 'death', 'palliative', 'ht-urgency', 'diarrhea', 'psych', 'incident', 'refuse', 'revisit', 'satisfaction', 'satisfaction-monthly'];
+            types.forEach(t => {
+                if (fixedReportsData[t]) renderReportPreview(t);
+                else {
+                    const inp = document.querySelector(`#${t}-link`)?.closest('.report-inputs');
+                    if (inp) {
+                        inp.style.display = 'block';
+                        // แสดงปุ่ม บันทึก/แจ้งเตือน คืนมาหากยังไม่มีข้อมูล
+                        const actionBtns = inp.nextElementSibling;
+                        if (actionBtns) {
+                            actionBtns.classList.add('d-flex');
+                            actionBtns.style.display = '';
+                        }
+                    }
+                    const prev = document.getElementById(`${t}-preview`);
+                    if (prev) prev.innerHTML = '';
+                }
+            });
+        }
+
+        window.editReport = function(type) {
+            const data = fixedReportsData[type];
+            const inp = document.querySelector(`#${type}-link`).closest('.report-inputs');
+            if (inp) {
+                inp.style.display = 'block';
+                // แสดงปุ่ม บันทึก/แจ้งเตือน คืนมาเมื่อกดแก้ไข
+                const actionBtns = inp.nextElementSibling;
+                if (actionBtns) {
+                    actionBtns.classList.add('d-flex');
+                    actionBtns.style.display = '';
+                }
+            }
+            document.getElementById(`${type}-link`).value = data.url;
+            document.getElementById(`${type}-recorder`).value = data.recorder;
+            document.getElementById(`${type}-email`).value = data.email || '';
+            document.getElementById(`${type}-preview`).innerHTML = '';
+        }
+
+        window.deleteReport = async function(type) {
+            if(confirm('คุณต้องการลบข้อมูลรายงานนี้ใช่หรือไม่?')) {
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/fixedReports`, type));
+            }
+        }
+
+        window.addCustomReport = async function() {
+            const title = document.getElementById('customReportTitleInput').value;
+            const url = document.getElementById('customReportLinkInput').value;
+            const rec = document.getElementById('customReportRecorderInput').value;
+            const email = document.getElementById('customReportEmailInput').value;
+            if(!title || !url || !rec) return showNotification('กรอกข้อมูลให้ครบ', 'warning');
+
+            const data = { title, url, recorder: rec, email: email, timestamp: new Date().toLocaleString('th-TH') };
+            try {
+                if(editingCustomReportId) {
+                    await setDoc(doc(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/customReports`, editingCustomReportId), data, {merge:true});
+                } else {
+                    await addDoc(collection(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/customReports`), data);
+                }
+                cancelEditCustomReport();
+            } catch(e) { console.error(e); }
+        }
+
+        window.quickUpdateCustomReport = function(id) {
+            const r = customReportsData.find(x => x.id === id);
+            if(!r) return;
+            pendingUpdateType = `custom_${id}`;
+            pendingUpdateData = r;
+            showUpdateModal();
+        }
+
+        window.renderCustomReports = function() {
+            const c = document.getElementById('customReportsContainer');
+            c.innerHTML = '';
+            customReportsData.forEach(r => {
+                const div = document.createElement('div');
+                div.className = 'col-lg-6 col-md-12 mb-4 report-grid-item';
+                div.setAttribute('data-title', r.title);
+                div.innerHTML = `
+                    <div class="card" id="card-custom-${r.id}">
+                        <div class="card-header" style="cursor: pointer;" onmouseenter="showPreview(event, 'custom_${r.id}', '${r.title}')" onmousemove="positionPreviewBox(event)" onmouseleave="hidePreview()">
+                            <h6><span class="header-icon-wrapper" style="background:#34495e;"><i class="fas fa-file-alt"></i></span> ${r.title}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-success d-flex flex-column mb-0">
+                                <div class="mb-2">
+                                    <span class="badge bg-success mb-1"><i class="fas fa-check-circle"></i> บันทึกข้อมูลแล้ว</span>
+                                    <div style="font-size:0.85rem;" class="text-muted"><i class="fas fa-user-edit"></i> ผู้บันทึก: ${r.recorder}</div>
+                                    ${r.email ? `<div style="font-size:0.85rem;" class="text-muted"><i class="fas fa-envelope"></i> รับผิดชอบโดย: ${r.email}</div>` : ''}
+                                    <div style="font-size:0.85rem;" class="text-muted"><i class="far fa-clock"></i> อัพเดทล่าสุด: <span class="fw-bold">${r.timestamp}</span></div>
+                                </div>
+                                <div class="btn-group mt-2 flex-wrap gap-1">
+                                    <button class="btn btn-sm btn-primary border-0 shadow-sm px-3 rounded" onclick="quickUpdateCustomReport('${r.id}')" title="อัพเดทเวลาเป็นปัจจุบัน"><i class="fas fa-sync-alt"></i> อัพเดทเวลา</button>
+                                    <button class="btn btn-sm btn-warning border-0 shadow-sm px-3 rounded" onclick="prepareNotify('custom_${r.id}', '${r.title}')" title="แจ้งเตือนผู้รับผิดชอบ"><i class="fas fa-bell"></i> แจ้งเตือน</button>
+                                    <button class="btn btn-sm btn-info text-white border-0 shadow-sm px-3 rounded" onclick="prepareSendReport('custom_${r.id}', '${r.title}')" title="ส่งรายงานให้ผู้บังคับบัญชา"><i class="fas fa-paper-plane"></i> ส่งรายงาน</button>
+                                    <a href="${r.url}" target="_blank" class="btn btn-sm btn-light border rounded"><i class="fas fa-external-link-alt text-primary"></i> เปิด</a>
+                                    <button class="btn btn-sm btn-light border rounded" onclick="editCustomReport('${r.id}')"><i class="fas fa-edit text-secondary"></i> แก้ไข</button>
+                                    <button class="btn btn-sm btn-light border rounded" onclick="deleteCustomReport('${r.id}')"><i class="fas fa-trash text-danger"></i> ลบ</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                c.appendChild(div);
+            });
+            filterReports(); 
+        }
+
+        window.editCustomReport = function(id) {
+            const r = customReportsData.find(x => x.id === id);
+            if(!r) return;
+            document.getElementById('customReportTitleInput').value = r.title;
+            document.getElementById('customReportLinkInput').value = r.url;
+            document.getElementById('customReportRecorderInput').value = r.recorder;
+            document.getElementById('customReportEmailInput').value = r.email || '';
+            editingCustomReportId = id;
+            document.getElementById('addCustomReportButton').innerHTML = '<i class="fas fa-save"></i> อัปเดต';
+            document.getElementById('cancelEditCustomReportButton').classList.remove('d-none');
+            document.getElementById('card-add-custom-report').scrollIntoView({behavior:'smooth'});
+            window.showAllReports(); 
+        }
+
+        window.cancelEditCustomReport = function() {
+            document.getElementById('customReportTitleInput').value = '';
+            document.getElementById('customReportLinkInput').value = '';
+            document.getElementById('customReportRecorderInput').value = '';
+            document.getElementById('customReportEmailInput').value = '';
+            editingCustomReportId = null;
+            document.getElementById('addCustomReportButton').innerHTML = '<i class="fas fa-plus"></i> บันทึก';
+            document.getElementById('cancelEditCustomReportButton').classList.add('d-none');
+        }
+
+        window.deleteCustomReport = async function(id) {
+            if(confirm('ลบรายงานนี้?')) await deleteDoc(doc(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/customReports`, id));
+        }
+
+        // --- Render Table of Contents --- //
+        window.renderTableOfContents = function() {
+            const toc = document.getElementById('tableOfContentsLinks');
+            if(!toc) return;
+            toc.innerHTML = '';
+            
+            const renderLink = (id, title, icon, isTabLink = false) => {
+                const a = document.createElement('a');
+                a.href = '#';
+                a.className = 'toc-link';
+                a.innerHTML = `<i class="${icon}"></i> <span>${title}</span>`;
+                
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    if(isTabLink) {
+                        const tabBtn = document.querySelector('#registry-tab');
+                        new bootstrap.Tab(tabBtn).show();
+                        window.showAllReports();
+                    } else {
+                        window.isolateReport(id);
+                    }
+                };
+                toc.appendChild(a);
+            }
+
+            renderLink('card-registry', 'ทะเบียนผู้ป่วยในชาย', 'fas fa-clipboard-list', true);
+            
+            const fixed = [
+                {id:'card-nursing', t:'สรุปกิจกรรมการพยาบาล'}, {id:'card-risk', t:'ความเสี่ยง'},
+                {id:'card-refer', t:'ผู้ป่วยส่งต่อ (Refer)'}, {id:'card-wound', t:'แผลกดทับ'},
+                {id:'card-wound-follow', t:'ติดตามแผลกดทับ'}, {id:'card-death', t:'ผู้ป่วยเสียชีวิต'},
+                {id:'card-palliative', t:'Palliative care'}, {id:'card-ht-urgency', t:'ตัวชี้วัด HT urgency'},
+                {id:'card-diarrhea', t:'ตัวชี้วัด Diarrhea'}, {id:'card-psych', t:'ตัวชี้วัดผู้ป่วยจิตเวช'},
+                {id:'card-incident', t:'อุบัติการณ์'}, {id:'card-refuse', t:'ปฏิเสธการรักษา'},
+                {id:'card-revisit', t:'ตัวชี้วัด Re-visit'}, {id:'card-satisfaction', t:'ความพึงพอใจ'},
+                {id:'card-satisfaction-monthly', t:'ความพึงพอใจ (รายเดือน)'}
+            ];
+            
+            fixed.forEach(f => renderLink(f.id, f.t, 'fas fa-bookmark'));
+            customReportsData.forEach(c => renderLink(`card-custom-${c.id}`, c.title, 'fas fa-file-alt'));
+            
+            if(document.getElementById('searchInput').value) filterReports();
+        }
+
+        window.previewLink = function(url) { window.open(url, '_blank'); }
+
+        window.showNotification = function(msg, type) {
+            const notif = document.createElement('div');
+            notif.className = `alert alert-${type} position-fixed top-0 end-0 m-3 shadow-sm`;
+            notif.style.zIndex = '9999';
+            notif.innerHTML = msg;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        window.scrollToTop = () => window.scrollTo({top: 0, behavior: 'smooth'});
+        
+        window.addEventListener('scroll', () => {
+            const btn = document.querySelector('.floating-btn');
+            if(window.pageYOffset > 300) btn.style.display = 'block';
+            else btn.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
