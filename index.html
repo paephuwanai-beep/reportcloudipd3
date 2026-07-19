@@ -521,7 +521,7 @@
                         <input type="text" class="form-control" id="registryButtonName" placeholder="ชื่อรายการ (เช่น มกราคม 2567)...">
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-primary w-100 h-100" onclick="addRegistryLink()">
+                        <button class="btn w-100 h-100 fw-bold text-white shadow-sm" style="background: #00b894; border: none;" onclick="addEventsLink()">
                             <i class="fas fa-plus"></i> เพิ่ม
                         </button>
                     </div>
@@ -1522,7 +1522,8 @@
                 div.className = 'link-item d-flex justify-content-between align-items-center flex-wrap';
                 div.innerHTML = `
                     <div class="mb-2 mb-md-0 d-flex align-items-center gap-3">
-                        <a href="${link.url}" target="_blank" class="btn btn-primary px-4 fw-bold">
+                        <!-- ปรับเป็นสีเขียว (#00b894) และตัวหนังสือสีขาวตรงนี้ครับ -->
+                        <a href="${link.url}" target="_blank" class="btn px-4 fw-bold text-white shadow-sm" style="background: #00b894; border: none;">
                             <i class="fas fa-external-link-alt me-2"></i> ${link.name}
                         </a>
                         <small class="text-muted"><i class="far fa-clock"></i> ${link.timestamp.split(' ')[0]}</small>
