@@ -493,6 +493,11 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="events-tab" data-bs-toggle="tab" data-bs-target="#events" type="button" role="tab">
+                            <i class="fas fa-notes-medical"></i> รายงานเหตุการณ์และหัตถการ
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
                         <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab">
                             <i class="fas fa-chart-line"></i> รายงานประจำเดือน
                         </button>
@@ -525,7 +530,30 @@
                             </div>
                         </div>
                     </div>
-
+<div class="tab-pane fade p-2 p-md-4" id="events" role="tabpanel">
+    <div class="card" id="card-events">
+        <div class="card-header">
+            <h5><span class="header-icon-wrapper" style="background: linear-gradient(135deg, #00b894, #00cec9);"><i class="fas fa-notes-medical"></i></span> รายงานเหตุการณ์และหัตถการ</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3 g-2">
+                <div class="col-md-7">
+                    <input type="url" class="form-control" id="eventsLink" placeholder="ใส่ลิงค์รายงานเหตุการณ์และหัตถการ...">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="eventsButtonName" placeholder="ชื่อรายการ (เช่น มกราคม 2567)...">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100 h-100" onclick="addEventsLink()">
+                        <i class="fas fa-plus"></i> เพิ่ม
+                    </button>
+                </div>
+            </div>
+            <div id="eventsLinks" class="mt-4">
+            </div>
+        </div>
+    </div>
+</div>
                     <div class="tab-pane fade p-2 p-md-4" id="reports" role="tabpanel">
                         
                         <div class="search-container">
@@ -1067,6 +1095,7 @@
         const initialAuthToken = null;
 
         let registryLinksData = [];
+        let eventsLinksData = [];
         let fixedReportsData = {}; 
         let customReportsData = []; 
         let supervisorData = { name: '', email: '' };
@@ -1149,6 +1178,14 @@
                 registryLinksData = [];
                 snapshot.forEach(doc => registryLinksData.push({ id: doc.id, ...doc.data() }));
                 renderRegistryLinks();
+                renderTableOfContents();
+            });
+
+            const eventsColRef = collection(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/eventsLinks`);
+            onSnapshot(eventsColRef, (snapshot) => {
+                eventsLinksData = [];
+                snapshot.forEach(doc => eventsLinksData.push({ id: doc.id, ...doc.data() }));
+                renderEventsLinks();
                 renderTableOfContents();
             });
 
@@ -1460,6 +1497,59 @@
             }
         }
 
+        window.addEventsLink = async function() {
+    const link = document.getElementById('eventsLink').value;
+    const name = document.getElementById('eventsButtonName').value;
+    if (!link || !name) return showNotification('กรุณากรอกลิงค์และชื่อรายการให้ครบถ้วน', 'warning');
+    if (!db) return;
+
+    try {
+        await addDoc(collection(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/eventsLinks`), {
+            url: link, name: name, timestamp: new Date().toLocaleString('th-TH')
+        });
+        document.getElementById('eventsLink').value = '';
+        document.getElementById('eventsButtonName').value = '';
+        showNotification('เพิ่มรายการเรียบร้อยแล้ว', 'success');
+    } catch (e) { showNotification(`ข้อผิดพลาด: ${e.message}`, 'danger'); }
+}
+
+window.renderEventsLinks = function() {
+    const container = document.getElementById('eventsLinks');
+    container.innerHTML = '';
+    
+    eventsLinksData.sort((a, b) => {
+        const dA = parseMonthYearToDate(a.name), dB = parseMonthYearToDate(b.name);
+        if (dA && dB) return dB.getTime() - dA.getTime();
+        if (dA) return -1; if (dB) return 1;
+        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+    });
+
+    eventsLinksData.forEach(link => {
+        const div = document.createElement('div');
+        div.className = 'link-item d-flex justify-content-between align-items-center flex-wrap';
+        div.innerHTML = `
+            <div class="mb-2 mb-md-0 d-flex align-items-center gap-3">
+                <a href="${link.url}" target="_blank" class="btn btn-primary px-4 fw-bold">
+                    <i class="fas fa-external-link-alt me-2"></i> ${link.name}
+                </a>
+                <small class="text-muted"><i class="far fa-clock"></i> ${link.timestamp.split(' ')[0]}</small>
+            </div>
+            <div class="btn-group shadow-sm">
+                <button class="btn btn-light border" onclick="previewLink('${link.url}', '${link.name}')"><i class="fas fa-eye text-info"></i></button>
+                <button class="btn btn-light border" onclick="deleteEventsLink('${link.id}')"><i class="fas fa-trash text-danger"></i></button>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+window.deleteEventsLink = async function(id) {
+    if(confirm('คุณต้องการลบรายการนี้ใช่หรือไม่?')) {
+        if(!db) return;
+        await deleteDoc(doc(db, `artifacts/${appId}/public/data/users/${FIXED_USER_ID}/eventsLinks`, id));
+    }
+}
+        
         // --- Notification Features --- //
 
         window.checkAutoNotification = function() {
@@ -1812,28 +1902,49 @@
 
         // --- Render Table of Contents --- //
         window.renderTableOfContents = function() {
-            const toc = document.getElementById('tableOfContentsLinks');
-            if(!toc) return;
-            toc.innerHTML = '';
-            
-            const renderLink = (id, title, icon, isTabLink = false) => {
-                const a = document.createElement('a');
-                a.href = '#';
-                a.className = 'toc-link';
-                a.innerHTML = `<i class="${icon}"></i> <span>${title}</span>`;
-                
-                a.onclick = (e) => {
-                    e.preventDefault();
-                    if(isTabLink) {
-                        const tabBtn = document.querySelector('#registry-tab');
-                        new bootstrap.Tab(tabBtn).show();
-                        window.showAllReports();
-                    } else {
-                        window.isolateReport(id);
-                    }
-                };
-                toc.appendChild(a);
+    const toc = document.getElementById('tableOfContentsLinks');
+    if(!toc) return;
+    toc.innerHTML = '';
+    
+    const renderLink = (id, title, icon, isTabLink = false, tabTargetId = null) => {
+        const a = document.createElement('a');
+        a.href = '#';
+        a.className = 'toc-link';
+        a.innerHTML = `<i class="${icon}"></i> <span>${title}</span>`;
+        
+        a.onclick = (e) => {
+            e.preventDefault();
+            if(isTabLink) {
+                const tabBtn = document.querySelector(tabTargetId);
+                if (tabBtn) new bootstrap.Tab(tabBtn).show();
+                window.showAllReports();
+            } else {
+                window.isolateReport(id);
             }
+        };
+        toc.appendChild(a);
+    }
+
+    // เมนูหลักที่แยก Tab
+    renderLink('card-registry', 'ทะเบียนผู้ป่วยในชาย', 'fas fa-clipboard-list', true, '#registry-tab');
+    renderLink('card-events', 'รายงานเหตุการณ์และหัตถการ', 'fas fa-notes-medical', true, '#events-tab');
+    
+    const fixed = [
+        {id:'card-nursing', t:'สรุปกิจกรรมการพยาบาล'}, {id:'card-risk', t:'ความเสี่ยง'},
+        {id:'card-refer', t:'ผู้ป่วยส่งต่อ (Refer)'}, {id:'card-wound', t:'แผลกดทับ'},
+        {id:'card-wound-follow', t:'ติดตามแผลกดทับ'}, {id:'card-death', t:'ผู้ป่วยเสียชีวิต'},
+        {id:'card-palliative', t:'Palliative care'}, {id:'card-ht-urgency', t:'ตัวชี้วัด HT urgency'},
+        {id:'card-diarrhea', t:'ตัวชี้วัด Diarrhea'}, {id:'card-psych', t:'ตัวชี้วัดผู้ป่วยจิตเวช'},
+        {id:'card-incident', t:'อุบัติการณ์'}, {id:'card-refuse', t:'ปฏิเสธการรักษา'},
+        {id:'card-revisit', t:'ตัวชี้วัด Re-visit'}, {id:'card-satisfaction', t:'ความพึงพอใจ'},
+        {id:'card-satisfaction-monthly', t:'ความพึงพอใจ (รายเดือน)'}
+    ];
+    
+    fixed.forEach(f => renderLink(f.id, f.t, 'fas fa-bookmark'));
+    customReportsData.forEach(c => renderLink(`card-custom-${c.id}`, c.title, 'fas fa-file-alt'));
+    
+    if(document.getElementById('searchInput').value) filterReports();
+}
 
             renderLink('card-registry', 'ทะเบียนผู้ป่วยในชาย', 'fas fa-clipboard-list', true);
             
