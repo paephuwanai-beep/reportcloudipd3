@@ -1510,10 +1510,41 @@
     if(!container) return;
     container.innerHTML = '';
     
-    // แก้ไขตรงส่วนการ sort นี้ครับ
+    // แก้ไขฟังก์ชัน sort ตรงนี้ครับ เพื่อแปลงข้อความ timestamp ให้เป็นวันที่จริงก่อนเทียบ
     eventsLinksData.sort((a, b) => {
-        // เรียงจากเวลาที่บันทึกจริง (timestamp) โดยเอาอันใหม่ล่าสุด (เวลามาก/ล่าสุด) ไว้บนสุด
-        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+        // ฟังก์ชันช่วยแปลงข้อความวันที่เช่น "4/9/2569 09:04:40" หรือ "ว/ด/ป ชั่วโมง:นาที" ให้เป็น Date object
+        const parseTimestamp = (ts) => {
+            if (!ts) return new Date(0);
+            // ถ้ามีรูปแบบ วัน/เดือน/ปี ชั่วโมง:นาที:วินาที
+            try {
+                const parts = ts.split(' ');
+                const dateParts = parts[0].split('/');
+                if (dateParts.length === 3) {
+                    let day = parseInt(dateParts[0], 10);
+                    let month = parseInt(dateParts[1], 10) - 1; // เดือนใน JS เริ่มจาก 0
+                    let year = parseInt(dateParts[2], 10);
+                    if (year > 2500) year -= 543; // แปลง พ.ศ. เป็น ค.ศ.
+                    
+                    let hour = 0, minute = 0, second = 0;
+                    if (parts[1]) {
+                        const timeParts = parts[1].split(':');
+                        hour = parseInt(timeParts[0], 10) || 0;
+                        minute = parseInt(timeParts[1], 10) || 0;
+                        second = parseInt(timeParts[2], 10) || 0;
+                    }
+                    return new Date(year, month, day, hour, minute, second);
+                }
+            } catch (e) {
+                console.error("Parse timestamp error:", e);
+            }
+            return new Date(ts);
+        };
+
+        const timeA = parseTimestamp(a.timestamp).getTime();
+        const timeB = parseTimestamp(b.timestamp).getTime();
+
+        // เอาเวลาที่ใหม่กว่า (ค่ามากกว่า) ขึ้นมาไว้บนสุด
+        return timeB - timeA;
     });
 
     eventsLinksData.forEach(link => {
